@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title> AYYA Two Wheeler Job Card</title>
+<link rel="icon" type="image/png" href="image/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Phase 3: Admin login -->
+<div id="loginView" class="wrap">
+ <div class="card login">
+  <div class="brand"><img class="brand-logo login-logo" src="image/logo.png" alt="Ayya Two Wheeler Workshop logo"><span style="color:var(--mute)">Two wheeler job cards</span></div>
+  <label for="u">Username</label><input id="u" autocomplete="username" value="username">
+  <label for="p" style="margin-top:10px">Password</label><input id="p" type="password" autocomplete="current-password" placeholder="password">
+  <p class="err" id="err"></p>
+  <button class="btn" style="width:100%" id="loginBtn">Sign in</button>
+ </div>
+</div>
+
+<div id="app" class="hide">
+ <header class="top">
+  <div class="brand"><img class="brand-logo" src="image/logo.png" alt="Ayya Two Wheeler Workshop logo"><div><h1>Ayya Two Wheeler</h1><small>Two wheeler job cards</small></div></div>
+  <nav>
+   <button data-go="dash">Dashboard</button>
+   <button data-go="new">New job card</button>
+   <button data-go="list">All job cards</button>
+   <button id="logout">Sign out</button>
+  </nav>
+ </header>
+ <main class="wrap" id="view"></main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="script.js" defer></script>
+</body>
+</html>
+
