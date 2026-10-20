@@ -159,13 +159,13 @@ function buildJobCardPdf(j,JsPDF,logo){
 async function shareJobCardPdf(j){
  var popup=window.open("about:blank","_blank");
  try{
-  toast("Preparing job card PDF…");var JsPDF=await loadPdfLib(),logo=await loadLogoImage(),blob=buildJobCardPdf(j,JsPDF,logo),name=j.no+"-"+j.reg.replace(/[^a-z0-9-]/gi,"_")+".pdf",file=new File([blob],name,{type:"application/pdf"}),message=summary(j);
+  toast("Preparing job card PDF…");var JsPDF=await loadPdfLib(),logo=await loadLogoImage(),blob=buildJobCardPdf(j,JsPDF,logo),name=j.no+"-"+j.reg.replace(/[^a-z0-9-]/gi,"_")+".pdf",file=new File([blob],name,{type:"application/pdf"});
   if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-   try{if(popup)popup.close();await navigator.share({files:[file],text:message,title:"Ayya Two Wheeler "+j.no});return}
+   try{if(popup)popup.close();await navigator.share({files:[file]});return}
    catch(shareError){if(shareError&&shareError.name==="AbortError")return}
   }
   var url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
-  var digits=String(j.phone||"").replace(/\D/g,"");if(digits.length===10)digits="91"+digits;var wa="https://wa.me/"+digits+"?text="+encodeURIComponent(message+"\n\nPDF downloaded: "+name);
+  var digits=String(j.phone||"").replace(/\D/g,"");if(digits.length===10)digits="91"+digits;var wa="https://wa.me/"+digits;
   if(popup)popup.location.href=wa;else window.location.href=wa;toast("PDF downloaded. Attach it in the WhatsApp chat.");setTimeout(function(){URL.revokeObjectURL(url)},60000)
  }catch(e){if(popup)popup.close();if(e&&e.name==="AbortError")return;console.error("Job card PDF error:",e);toast(e&&e.message?e.message:"Could not create/share the PDF. Please try again.")}
 }
