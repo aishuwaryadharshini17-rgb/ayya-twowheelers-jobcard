@@ -165,8 +165,7 @@ async function shareJobCardPdf(j){
    catch(shareError){if(shareError&&shareError.name==="AbortError")return}
   }
   var url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
-  var digits=String(j.phone||"").replace(/\D/g,"");if(digits.length===10)digits="91"+digits;var wa="https://wa.me/"+digits;
-  if(popup)popup.location.href=wa;else window.location.href=wa;toast("PDF downloaded. Attach it in the WhatsApp chat.");setTimeout(function(){URL.revokeObjectURL(url)},60000)
+  if(popup)popup.close();toast("PDF downloaded. This browser cannot attach files directly. Open WhatsApp and attach the PDF.");setTimeout(function(){URL.revokeObjectURL(url)},60000)
  }catch(e){if(popup)popup.close();if(e&&e.name==="AbortError")return;console.error("Job card PDF error:",e);toast(e&&e.message?e.message:"Could not create/share the PDF. Please try again.")}
 }
 function loadLogoImage(){return new Promise(function(resolve,reject){var img=new Image();img.onload=function(){resolve(img)};img.onerror=function(){reject(new Error("Logo image could not be loaded from image/logo.png"))};img.src="image/logo.png"})}
