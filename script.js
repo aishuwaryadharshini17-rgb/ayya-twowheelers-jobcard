@@ -118,7 +118,7 @@ function detail(id){
  $("edit").onclick=function(){go("edit",id)};
  $("deleteJob").onclick=function(){if(!window.confirm("Delete job card "+j.no+"? This also removes its saved photos and cannot be undone."))return;jobs=jobs.filter(function(item){return item.no!==id});save();toast("Job card deleted");go("list")};
  $("pr").onclick=function(){document.title=j.no+" "+j.reg;window.print()};
- $("wa").onclick=function(){share(j,summary(j),false,true)};
+ $("wa").onclick=function(){shareJobCardPdf(j)};
  $("sharePdf").onclick=function(){shareJobCardPdf(j)};
  $("uw").onclick=function(){share(j,$("um").value,false,true)};
  $("us").onclick=function(){share(j,$("um").value,false)}
