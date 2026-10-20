@@ -112,7 +112,7 @@ function detail(id){
  '<div class="kv"><div><span>Total amount</span><b>'+money(j.totalAmount)+'</b></div></div>'+
  '<div class="noprint" style="margin:14px 0"><label for="st">Status (Phase 10)</label><div class="row"><select id="st" style="max-width:220px">'+STATUSES.map(function(s){return '<option'+(s===j.status?' selected':'')+'>'+s+'</option>'}).join("")+'</select>'+tag(j.status)+'</div></div>'+
  '<div class="ph">'+phBox("Before",j.before)+phBox("After",j.after)+'</div>'+
- '<div class="row noprint" style="margin-top:22px"><button class="btn" id="edit">Update job card</button><button class="btn wa" id="wa">Share job card on WhatsApp</button><button class="btn alt" id="sharePdf">Share PDF</button><button class="btn alt" id="pr">Print / Save as PDF</button><button class="btn alt" onclick="go(\'list\')">Back to list</button><button class="btn" id="deleteJob" style="background:#9f211a">Delete job card</button></div>'+
+ '<div class="row noprint" style="margin-top:22px"><button class="btn" id="edit">Update job card</button><button class="btn wa" id="wa">Download job card PDF</button><button class="btn alt" id="pr">Print / Save as PDF</button><button class="btn alt" onclick="go(\'list\')">Back to list</button><button class="btn" id="deleteJob" style="background:#9f211a">Delete job card</button></div>'+
  '<div class="noprint upd"><h3>Update message to customer</h3><textarea id="um" aria-label="Update message">'+esc(updateMsg(j))+'</textarea><div class="row"><button class="btn wa" id="uw">Send update on WhatsApp</button><button class="btn alt" id="us">Share update</button></div></div></div>';
  $("st").onchange=function(){j.status=$("st").value;if(j.status==="Delivered"&&!j.deliveredDate)j.deliveredDate=localDate();save();toast("Status updated. Review the message below and send it.");detail(id)};
  $("edit").onclick=function(){go("edit",id)};
@@ -157,16 +157,10 @@ function buildJobCardPdf(j,JsPDF,logo){
  return doc.output("blob")
 }
 async function shareJobCardPdf(j){
- var popup=window.open("about:blank","_blank");
  try{
-  toast("Preparing job card PDF…");var JsPDF=await loadPdfLib(),logo=await loadLogoImage(),blob=buildJobCardPdf(j,JsPDF,logo),name=j.no+"-"+j.reg.replace(/[^a-z0-9-]/gi,"_")+".pdf",file=new File([blob],name,{type:"application/pdf"});
-  if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-   try{if(popup)popup.close();await navigator.share({files:[file]});return}
-   catch(shareError){if(shareError&&shareError.name==="AbortError")return}
-  }
-  var url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
-  if(popup)popup.close();toast("PDF downloaded. This browser cannot attach files directly. Open WhatsApp and attach the PDF.");setTimeout(function(){URL.revokeObjectURL(url)},60000)
- }catch(e){if(popup)popup.close();if(e&&e.name==="AbortError")return;console.error("Job card PDF error:",e);toast(e&&e.message?e.message:"Could not create/share the PDF. Please try again.")}
+  toast("Preparing job card PDF…");var JsPDF=await loadPdfLib(),logo=await loadLogoImage(),blob=buildJobCardPdf(j,JsPDF,logo),name=j.no+"-"+j.reg.replace(/[^a-z0-9-]/gi,"_")+".pdf",url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();toast("PDF downloaded");setTimeout(function(){URL.revokeObjectURL(url)},60000)
+ }catch(e){console.error("Job card PDF error:",e);toast(e&&e.message?e.message:"Could not create/download the PDF. Please try again.")}
 }
 function loadLogoImage(){return new Promise(function(resolve,reject){var img=new Image();img.onload=function(){resolve(img)};img.onerror=function(){reject(new Error("Logo image could not be loaded from image/logo.png"))};img.src="image/logo.png"})}
 function summary(j){
